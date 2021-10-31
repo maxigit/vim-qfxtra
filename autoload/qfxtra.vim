@@ -41,22 +41,44 @@ endfunction
 
 " Push a new empty list 
 " to the history
-function qfxtra#new(loc)
+function qfxtra#new(loc, title="")
   if a:loc
     lexpr []
   else
     cexpr []
   endif
+  call qfxtra#setTitle(a:loc, a:title)
 endfunction
 
 " Get a quickfix list compatible with setqflist
-function qfxtra#getlist(loc)
+function qfxtra#getList(loc)
   if a:loc
-    call getloclist(bufnr())
+    return getloclist(bufnr(),{'title':1, 'items':1})
   else
-    call getqflist()
+    return getqflist()
   endif
 endfunction
 
+function qfxtra#setTitle(loc, title)
+  if a:title == ""
+    return
+  endif
+  if a:loc
+    call setloclist(bufnr(), [], 'a', {'title': a:title})
+  else
+    call setqflist([], 'a', {'title': a:title})
+  endif
+endfunction
 
+" Save a quickfix to loclist or vice versa
+function qfxtra#copyToLoc(loc)
+  let list = qfxtra#getList(!a:loc)
+  call qfxtra#new(a:loc, list.title)
+  if a:loc
+    call setloclist(bufnr(), list.items, 'r')
+  else
+    echo list
+    call setqflist(list.items, 'r')
+  endif
+endfunction
 
