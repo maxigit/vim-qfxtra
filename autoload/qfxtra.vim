@@ -29,6 +29,13 @@ function qfxtra#addRange(loc, start, end, type='I')
 
 endfunction
 
+" Add current line with count
+function qfxtra#addCurrentLine(loc)
+  let l = line('.')
+  return qfxtra#addRange(a:loc,l, l+v:count1-1)
+endfunction
+
+
 " Clean the current list
 " Doesn't modify the history
 function qfxtra#clear(loc)

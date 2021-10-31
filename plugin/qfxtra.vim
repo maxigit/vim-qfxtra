@@ -1,5 +1,7 @@
 vmap <silent> <space>ln :<C-U>call qfxtra#addRange(1, line("'<"), line("'>"))<CR>
 vmap <silent> <space>cn :<C-U>call qfxtra#addRange(0, line("'<"), line("'>"))<CR>
+nnoremap <silent> <space>ln :<C-U>call qfxtra#addCurrentLine(1)<CR>
+nnoremap <silent> <space>cn :<C-U>call qfxtra#addCurrentLine(0)<CR>
 
 nnoremap <silent> <space>lN :<C-U>call qfxtra#new(1)<Cr>
 nnoremap <silent> <space>lC :<C-U>call qfxtra#clear(1)<Cr>
