@@ -13,3 +13,9 @@ nnoremap <silent> <space>cG :<C-U>call qfxtra#copyToLoc(0)<Cr>
 
 nnoremap <silent> <space>lT :<C-U>call qfxtra#setTitle(1, input("Title: "))<Cr>
 nnoremap <silent> <space>cT :<C-U>call qfxtra#setTitle(0, input("Title: "))<Cr>
+
+
+nnoremap <silent> <space>l<space> :ladd ['']<Cr>
+nnoremap <silent> <space>l- :ladd ['--------------------------------------------------']<Cr>
+nnoremap <silent> <space>c<space> :ladd ['']<Cr>
+nnoremap <silent> <space>c- :cadd ['--------------------------------------------------']<Cr>

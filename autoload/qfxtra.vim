@@ -18,9 +18,6 @@ function qfxtra#addRange(loc, start, end, type='I')
     let type = 'I'
     let buf = ''
   endfor
-  "call add(entries, {'text': '--------------------------------'})
-  call add(entries, {'text': ''})
-  call add(entries, {'text': ''})
   if a:loc
     call setloclist(buf, entries, 'a')
   else
