@@ -10,3 +10,6 @@ nnoremap <silent> <space>cC :<C-U>call qfxtra#clear(0)<Cr>
 " Get from other
 nnoremap <silent> <space>lG :<C-U>call qfxtra#copyToLoc(1)<Cr>
 nnoremap <silent> <space>cG :<C-U>call qfxtra#copyToLoc(0)<Cr>
+
+nnoremap <silent> <space>lT :<C-U>call qfxtra#setTitle(1, input("Title: "))<Cr>
+nnoremap <silent> <space>cT :<C-U>call qfxtra#setTitle(0, input("Title: "))<Cr>
