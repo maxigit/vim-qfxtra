@@ -59,7 +59,7 @@ function qfxtra#getList(loc)
   if a:loc
     return getloclist(bufnr(),{'title':1, 'items':1})
   else
-    return getqflist()
+    return getqflist({'title':1, 'items':1})
   endif
 endfunction
 
