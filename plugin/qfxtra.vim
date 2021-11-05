@@ -21,3 +21,9 @@ nnoremap <silent> <space>l- :ladd ['--------------------------------------------
 nnoremap <silent> <space>ca :cadd [input("Annotation: ")]<Cr>
 nnoremap <silent> <space>c<space> :ladd ['']<Cr>
 nnoremap <silent> <space>c- :cadd ['--------------------------------------------------']<Cr>
+
+
+nnoremap <silent> <space>l> :<C-U>call qfxtra#setContext(1,v:count1,'i')<Cr>
+nnoremap <silent> <space>l< :<C-U>call qfxtra#setContext(1,-v:count1,'i')<Cr>
+nnoremap <silent> <space>c> :<C-U>call qfxtra#setContext(0,v:count1,'i')<Cr>
+nnoremap <silent> <space>c< :<C-U>call qfxtra#setContext(0,-v:count1,'i')<Cr>

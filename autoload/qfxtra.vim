@@ -52,21 +52,25 @@ function qfxtra#getList(loc, what={})
     let what = a:what
   endif
   if a:loc
-    return getloclist(bufnr(),what)
+    return getloclist(0,what)
   else
     return getqflist(what)
   endif
 endfunction
 
-function qfxtra#setList(loc, list, action, what=v:none)
+function qfxtra#setList(loc, list, action, what={})
   if a:loc
-    if a:what == v:none
-      call setloclist(bufnr(), a:list, a:action)
+    if a:what == {}
+      call setloclist(0, a:list, a:action)
     else
-      call setloclist(bufnr(), a:list, a:action, a:what)
+      call setloclist(0, a:list, a:action, a:what)
     endif
   else
-    call setqflist(a:list, a:action, a:what)
+    if a:what == {}
+      call setqflist(a:list, a:action)
+    else
+      call setqflist(a:list, a:action, a:what)
+    endif
   endif
 endfunction
 
@@ -75,7 +79,6 @@ function qfxtra#setTitle(loc, title)
     return
   endif
   call qfxtra#setList(a:loc,[], 'a', {'title': a:title})
-  endif
 endfunction
 
 " Save a quickfix to loclist or vice versa
@@ -85,7 +88,6 @@ function qfxtra#copyToLoc(loc)
   if a:loc
     call setloclist(bufnr(), list.items, 'r')
   else
-    echo list
     call setqflist(list.items, 'r')
   endif
 endfunction
