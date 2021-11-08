@@ -104,33 +104,42 @@ function qfxtra#setContext(loc,toExpand, mode='s')
   " error and what to expand or shrink
   let next = start+1
   let llength = len(list.items)-1
-  while next < llength && !list.items[next].valid
+  while next <= llength && !list.items[next].valid
     let next=next+1
   endwhile
   let  last = next -1
   let entry = list.items[start]
 
+  "   0...1......2.....
+  "       ^     ^^    ^
+  "       |     ||    +-- llength
+  "       |     |+------- next
+  "       |     +-------- last
+  "       +-------------- start
+
   let contextLength = last - start
+  " by default we can't delete an entry even if size is -1
+  " we need to use the 'd' mode
   if a:mode == 's' " set
-    let size = a:toExpand
+    let size = max([a:toExpand,-1])
+  elseif a:mode =='d'
+    let size = -1
   else
-    let size = contextLength + a:toExpand
+    let size = max([0,contextLength + a:toExpand])
   endif
-
-
+  let items = []
+  if start+size >= 0
+    let items = list.items[0:start+size]
+  endif
 
   if size > contextLength
-    let lines = getbufline(entry.bufnr, entry.lnum+1, entry.lnum+size)
-    let entries = []
+    let lines = getbufline(entry.bufnr, entry.lnum+contextLength+1, entry.lnum+size)
     for line in lines
-      call add(entries, {'text':line, 'valid':0})
+      call add(items, {'text':line, 'valid':0})
     endfor
-    let items = list.items[0:start] + entries + list.items[next:llength]
-  elseif size < contextLength
-    let items = list.items[0:start+size] + list.items[next:llength]
-  else
-    return
   endif
+
+  let items += list.items[next:llength]
 
   call qfxtra#setList(a:loc, items, 'r')
 endfunction
