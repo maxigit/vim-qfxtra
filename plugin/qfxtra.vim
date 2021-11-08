@@ -27,3 +27,7 @@ nnoremap <silent> <space>l> :<C-U>call qfxtra#setContext(1,v:count1,'i')<Cr>
 nnoremap <silent> <space>l< :<C-U>call qfxtra#setContext(1,-v:count1,'i')<Cr>
 nnoremap <silent> <space>c> :<C-U>call qfxtra#setContext(0,v:count1,'i')<Cr>
 nnoremap <silent> <space>c< :<C-U>call qfxtra#setContext(0,-v:count1,'i')<Cr>
+
+
+command QSort call qfxtra#sort(0)
+command LSort call qfxtra#sort(1)

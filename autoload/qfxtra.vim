@@ -136,14 +136,62 @@ function qfxtra#setContext(loc,toExpand, mode='s')
 endfunction
 
 
-" Return the current entry item for the given liste
-function qfxtra#getCurrent(loc)
-  let list = qfxtra#getList(a:loc,{'items':1, 'idx':1})
-  echomsg "IDX" list.idx
-  if list.items == []
-    return {}
+" Group all entries so that invalid
+" are considered as children of valid one
+" usefull to sort or delete a full set of entry
+"  the headline (valid) and it's annotations
+function qfxtra#group(list)
+  if a:list == []
+    return a:list
+  endif
+  let entry = remove(a:list, 0)
+  let entry['annotations'] = []
+  let groups = []
+  for e in a:list
+    if e.valid
+      let groups += [entry]
+      let entry = e
+      let entry['annotations'] = []
+    else
+      let entry.annotations += [e]
+    endif
+  endfor
+  let groups += [entry]
+  return groups
+endfunction
+
+function qfxtra#ungroup(groups)
+  let entries = []
+  for group in a:groups
+    let entries += [group]
+    let entries += group.annotations
+    unlet group.annotations
+  endfor
+  return entries
+endfunction
+
+function qfxtra#sortGroups(groups)
+  return sort(a:groups, {a, b -> s:compare(a, b)})
+endfunction
+  
+function s:compare(a,b)
+  if a:a.bufnr >  a:b.bufnr
+    return 1
+  elseif a:a.bufnr < a:b.bufnr
+    return -1
+  elseif a:a.lnum > a:b.lnum
+    return 1
+  elseif a:a.lnum == a:b.lnum
+    return -1
   else
-    return list.items[list.idx-1]
+    return 0
   endif
 endfunction
 
+
+function qfxtra#sort(loc)
+  let entries = qfxtra#getList(a:loc).items
+  let groups = qfxtra#group(entries)
+  call qfxtra#sortGroups(groups)
+  call qfxtra#setList(a:loc, qfxtra#ungroup(groups), 'r')
+endfunction
