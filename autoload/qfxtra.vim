@@ -133,7 +133,7 @@ function qfxtra#setContext(loc,toExpand, mode='s')
   endif
   let items = []
   if start+size >= 0
-    let items = entries[0:start+size]
+    let items = entries[0:start+min([size,contextLength])]
   endif
 
   if size > contextLength
