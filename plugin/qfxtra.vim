@@ -27,9 +27,13 @@ nnoremap <silent> <space>l> :<C-U>call qfxtra#setContext(1,v:count1,'i')<Cr>
 nnoremap <silent> <space>l< :<C-U>call qfxtra#setContext(1,-v:count1,'i')<Cr>
 nnoremap <silent> <space>c> :<C-U>call qfxtra#setContext(0,v:count1,'i')<Cr>
 nnoremap <silent> <space>c< :<C-U>call qfxtra#setContext(0,-v:count1,'i')<Cr>
-nnoremap <silent> <space>ld :<C-U>call qfxtra#setContext(1,-1,'d')<Cr>
-nnoremap <silent> <space>cd :<C-U>call qfxtra#setContext(0,-1,'d')<Cr>
+nnoremap <silent> <space>ld :<C-U>call qfxtra#setContext(1,-1,'s')<Cr>
+nnoremap <silent> <space>cd :<C-U>call qfxtra#setContext(0,-1,'s')<Cr>
 
 
 command QSort call qfxtra#sort(0)
 command LSort call qfxtra#sort(1)
+
+autocmd FileType qf nnoremap <silent><buffer> > :<C-U>call qfxtra#setContext(-1,v:count1,'i')<Cr>
+autocmd FileType qf nnoremap <silent><buffer> < :<C-U>call qfxtra#setContext(-1,-v:count1,'i')<Cr>
+autocmd FileType qf nnoremap <silent><buffer> d :<C-U>call qfxtra#setContext(-1,-1,'s')<Cr>

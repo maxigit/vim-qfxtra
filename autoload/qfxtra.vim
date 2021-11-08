@@ -97,18 +97,25 @@ endfunction
 " Those lines are inserted just after the current error
 " resulting in effectively expand the current error
 function qfxtra#setContext(loc,toExpand, mode='s')
-  let list = qfxtra#getList(a:loc, {'items':1, 'idx':0})
-  let start = list.idx-1
+  if a:loc == -1
+    let idx = qfxtra#getCurrentIdx()
+    let entries = idx.items
+    let start = idx.index
+  else
+    let list = qfxtra#getList(a:loc, {'items':1, 'idx':0})
+    let start = list.idx-1
+    let entries = list.items
+  endif
   " find the next valid item
   " All invalid item are considered part of the current
   " error and what to expand or shrink
   let next = start+1
-  let llength = len(list.items)-1
-  while next <= llength && !list.items[next].valid
+  let llength = len(entries)-1
+  while next <= llength && !entries[next].valid
     let next=next+1
   endwhile
   let  last = next -1
-  let entry = list.items[start]
+  let entry = entries[start]
 
   "   0...1......2.....
   "       ^     ^^    ^
@@ -118,18 +125,15 @@ function qfxtra#setContext(loc,toExpand, mode='s')
   "       +-------------- start
 
   let contextLength = last - start
-  " by default we can't delete an entry even if size is -1
-  " we need to use the 'd' mode
   if a:mode == 's' " set
     let size = max([a:toExpand,-1])
-  elseif a:mode =='d'
-    let size = -1
   else
     let size = max([0,contextLength + a:toExpand])
+    " can set -1 by reducing, as it will delete the entry
   endif
   let items = []
   if start+size >= 0
-    let items = list.items[0:start+size]
+    let items = entries[0:start+size]
   endif
 
   if size > contextLength
@@ -139,7 +143,7 @@ function qfxtra#setContext(loc,toExpand, mode='s')
     endfor
   endif
 
-  let items += list.items[next:llength]
+  let items += entries[next:llength]
 
   call qfxtra#setList(a:loc, items, 'r')
 endfunction
@@ -203,4 +207,24 @@ function qfxtra#sort(loc)
   let groups = qfxtra#group(entries)
   call qfxtra#sortGroups(groups)
   call qfxtra#setList(a:loc, qfxtra#ungroup(groups), 'r')
+endfunction
+
+
+" Find the index of the entry under the cursor
+" if buffer is a location
+function qfxtra#getCurrentIdx()
+  let info = getwininfo(win_getid())[0]
+  if info.loclist
+    let loc = 1
+  elseif info.quickfix
+    let loc =0
+  else
+    return {}
+  endif
+  let entries = qfxtra#getList(loc).items
+  let index = line('.')-1
+  while !entries[index].valid && index >= 0
+    let index -=1
+  endwhile
+  return #{index: index, loc: loc, items: entries}
 endfunction
