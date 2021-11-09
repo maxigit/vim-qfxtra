@@ -101,10 +101,13 @@ function qfxtra#setContext(loc,toExpand, mode='s')
     let idx = qfxtra#getCurrentIdx()
     let entries = idx.items
     let start = idx.index
+    let loc = idx.loc
+    echo "IDX" idx
   else
     let list = qfxtra#getList(a:loc, {'items':1, 'idx':0})
     let start = list.idx-1
     let entries = list.items
+    let loc = a:loc
   endif
   " find the next valid item
   " All invalid item are considered part of the current
@@ -145,7 +148,7 @@ function qfxtra#setContext(loc,toExpand, mode='s')
 
   let items += entries[next:llength]
 
-  call qfxtra#setList(a:loc, items, 'r')
+  call qfxtra#setList(loc, items, 'r')
 endfunction
 
 
